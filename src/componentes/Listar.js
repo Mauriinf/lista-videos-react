@@ -1,80 +1,63 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import {Link} from "react-router-dom";
 import { Button, Card, CardContent, Typography } from "@mui/material";
-export default function Listar(){
-    const [tasks, setTasks] = useState([]);
-    const listaMovies = async () => {
-        const response = await fetch("http://127.0.0.1:8080/api/movies", { mode: 'cors' });
-        const data = await response.json();
-        console.log(data);
-    };
-    
-    useEffect(()=>{
-        listaMovies()
-    },[])
-    return ( 
-        <table className='table'>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>correo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td className="row">1</td>
-                    <td>oscar</td>
-                    <td>maur@gemai.com</td>
-                    <td><div className="btn-group" role="group" aria-label="">
-                        <button type="button" className="btn btn-primary">Editar</button>
-                        <button type="button" className="btn btn-danger">Eliminar</button>
-                    </div></td>
-                </tr>
-            </tbody>
-        </table> 
-        );
-}
-/*
+
 class Listar extends React.Component {
     constructor(props) {
         super(props);
     }
-    state = { datosCargados:false }
+    state = { datosCargados:false,
+              movies:[]  
+
+    }
     cargarDatos(){
-        fetch("http://127.0.0.1:8080/api/movies", { mode: 'cors' })
-        .then(respuesta=>respuesta)
-        .then((datosRespuesta)=>{console.log(datosRespuesta)})
-        .catch(console.error(this.props.url))
+        fetch("http://localhost:8080/api/movies", { mode: 'cors' })
+        .then(respuesta=>respuesta.json())
+        .then((datosRespuesta)=>{
+            console.log(datosRespuesta)
+            this.setState({datosCargados:true,movies:datosRespuesta})
+        })
+        .catch(console.log())
     }
     componentDidMount(){
         this.cargarDatos();
     }
     render() { 
-        return ( <table className='table'>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>correo</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td className="row">1</td>
-                <td>oscar</td>
-                <td>maur@gemai.com</td>
-                <td><div className="btn-group" role="group" aria-label="">
-                    <button type="button" className="btn btn-primary">Editar</button>
-                    <button type="button" className="btn btn-danger">Eliminar</button>
-                </div></td>
-            </tr>
-        </tbody>
-    </table> );
+        const{datosCargados,movies}=this.state
+        if(!datosCargados){
+            return(<div>Cargando.......</div>);
+        }else{
+            return ( 
+            <table className='table'>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>categoria</th>
+                        <th>titulo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                    movies.map(
+                        (video)=>(
+                            <tr>
+                                <td className="row">{video.id}</td>
+                                <td>{video.category}</td>
+                                <td>{video.title}</td>
+                            </tr>
+                        )
+                    )
+                        
+                    }
+                    
+                </tbody>
+            </table> 
+            );
+        }
+        
     }
 }
  
 export default Listar;
-*/
+
 
